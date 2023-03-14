@@ -1,0 +1,49 @@
+name: reservation-system
+
+services:
+  php:
+    container_name: php
+    build:
+      dockerfile: docker/php/Dockerfile
+      context: ..
+      target: ${BUILD_TARGET}
+    volumes:
+      - ..:/var/www/html
+    environment:
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_PORT: ${MYSQL_PORT}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      XDEBUG_MODE: ${XDEBUG_MODE}
+
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+
+  mysql:
+    container_name: mysql
+    image: mysql:8.0
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+
+  redis:
+    container_name: redis
+    image: redis:latest
+
+volumes:
+  mysql_data:
