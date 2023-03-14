@@ -7,13 +7,13 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 
 COPY --from=composer:2.4 /usr/bin/composer /usr/bin/composer
 
-#COPY composer.* .
-#
-#RUN composer install --prefer-dist --no-dev --no-scripts --no-progress --no-interaction
-#
-#COPY . .
-#
-#RUN composer dump-autoload --optimize
+COPY composer.* .
+
+RUN composer install --prefer-dist --no-dev --no-scripts --no-progress --no-interaction
+
+COPY . .
+
+RUN composer dump-autoload --optimize
 
 FROM app as app_dev
 
