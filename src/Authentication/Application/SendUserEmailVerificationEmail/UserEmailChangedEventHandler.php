@@ -48,7 +48,9 @@ final class UserEmailChangedEventHandler implements EventHandlerInterface
             throw new JsonEncodeException();
         }
 
-        $emailVerificationSlug = base64_encode(hash_hmac('sha256', $encodedData, $this->secret, true));
+        $emailVerificationSlug = urlencode(
+            base64_encode(hash_hmac('sha256', $encodedData, $this->secret, true))
+        );
         $user->setEmailVerificationSlug($emailVerificationSlug);
         $user->setEmailVerificationSlugExpiresAt(new DateTimeImmutable('+30 minutes'));
         $user->setUpdatedAt(new DateTimeImmutable());

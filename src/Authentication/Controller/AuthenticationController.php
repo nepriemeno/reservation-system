@@ -14,7 +14,7 @@ use App\Authentication\Application\VerifyUserEmail\VerifyUserEmailCommand;
 use App\Shared\Controller\ApiController;
 use App\Shared\Domain\Exception\BadRequestException;
 use App\Shared\Domain\Exception\DomainException;
-use http\Exception\UnexpectedValueException;
+use UnexpectedValueException;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
