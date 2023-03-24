@@ -10,13 +10,27 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 final class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    /**
+     * @param string $uuid
+     * @param string $email
+     * @param string|null $password
+     * @param string[] $roles
+     * @param string|null $emailVerificationSlug
+     * @param DateTimeImmutable|null $emailVerificationSlugExpiresAt
+     * @param bool $isActive
+     * @param DateTimeImmutable $createdAt
+     * @param DateTimeImmutable $updatedAt
+     */
     public function __construct(
         private readonly string $uuid,
         private string $email,
-        private string $password,
-        private readonly array $roles,
-        private readonly DateTimeImmutable $createdAt,
-        private DateTimeImmutable $updatedAt,
+        private ?string $password = null,
+        private readonly array $roles = ['ROLE_USER'],
+        private ?string $emailVerificationSlug = null,
+        private ?DateTimeImmutable $emailVerificationSlugExpiresAt = null,
+        private bool $isActive = true,
+        private readonly DateTimeImmutable $createdAt = new DateTimeImmutable(),
+        private DateTimeImmutable $updatedAt = new DateTimeImmutable(),
     ) {
     }
 
@@ -37,7 +51,7 @@ final class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return $this->password;
     }
@@ -54,6 +68,47 @@ final class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->roles;
     }
 
+    public function getIsEmailVerified(): bool
+    {
+        return $this->getEmailVerificationSlug() === null && $this->getEmailVerificationSlugExpiresAt() === null;
+    }
+
+    public function getEmailVerificationSlug(): ?string
+    {
+        return $this->emailVerificationSlug;
+    }
+
+    public function setEmailVerificationSlug(?string $emailVerificationSlug): self
+    {
+        $this->emailVerificationSlug = $emailVerificationSlug;
+
+        return $this;
+    }
+
+    public function getEmailVerificationSlugExpiresAt(): ?DateTimeImmutable
+    {
+        return $this->emailVerificationSlugExpiresAt;
+    }
+
+    public function setEmailVerificationSlugExpiresAt(?DateTimeImmutable $emailVerificationSlugExpiresAt): self
+    {
+        $this->emailVerificationSlugExpiresAt = $emailVerificationSlugExpiresAt;
+
+        return $this;
+    }
+
+    public function getIsActive(): bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): self
+    {
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+
     public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
@@ -64,9 +119,11 @@ final class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(DateTimeImmutable $updatedAt): DateTimeImmutable
+    public function setUpdatedAt(DateTimeImmutable $updatedAt): self
     {
-        return $this->updatedAt = $updatedAt;
+        $this->updatedAt = $updatedAt;
+
+        return $this;
     }
 
     public function eraseCredentials(): void

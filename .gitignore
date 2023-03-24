@@ -10,4 +10,9 @@
 ###< symfony/framework-bundle ###
 .php-cs-fixer.cache
 /tools/php-cs-fixer/vendor
+/tools/phpstan/vendor
 /.idea
+
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###

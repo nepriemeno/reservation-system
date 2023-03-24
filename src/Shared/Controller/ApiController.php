@@ -8,12 +8,28 @@ use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class ApiController
+abstract class ApiController
 {
     public function __construct(protected ValidatorInterface $validator)
     {
     }
 
+    /**
+     * @param array<string, string> $parameters
+     * @param Collection $constraint
+     *
+     * @return array{
+     *      message: 'validation_failed',
+     *      errors: array<
+     *          int,
+     *          array{
+     *              property: string,
+     *              value: mixed,
+     *              message: string|\Stringable
+     *          }
+     *      >
+     * } $messages
+     */
     protected function getErrorMessages(array $parameters, Collection $constraint): array
     {
         $violations = $this->validator->validate(

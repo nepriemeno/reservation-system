@@ -9,6 +9,7 @@ use App\Authentication\Domain\UserRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/** @template-extends ServiceEntityRepository<User> */
 class UserRepository extends ServiceEntityRepository implements UserRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
@@ -30,5 +31,10 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
     public function findOneByEmail(string $email): ?User
     {
         return $this->findOneBy(['email' => $email]);
+    }
+
+    public function findOneByEmailVerificationSlug(string $emailVerificationSlug): ?User
+    {
+        return $this->findOneBy(['emailVerificationSlug' => $emailVerificationSlug]);
     }
 }

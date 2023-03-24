@@ -20,10 +20,29 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
     App\Authentication\Application\CreateUser\CreateUserCommandHandler:
         tags: [messenger.message_handler]
+    App\Authentication\Application\ChangeUserEmail\ChangeUserEmailCommandHandler:
+        tags: [ messenger.message_handler ]
+    App\Authentication\Application\ChangeUserPassword\ChangeUserPasswordCommandHandler:
+        tags: [ messenger.message_handler ]
+    App\Authentication\Application\VerifyUserEmail\VerifyUserEmailCommandHandler:
+        tags: [ messenger.message_handler ]
+    App\Authentication\Application\AuthenticateUser\AuthenticateUserCommandHandler:
+        tags: [ messenger.message_handler ]
+    App\Authentication\Application\SendUserEmailVerificationEmail\UserEmailChangedEventHandler:
+        tags: [ messenger.message_handler ]
+        arguments:
+            $secret: '%env(APP_SECRET)%'
+            $sender: '%env(MAILER_SENDER)%'
+    App\Authentication\Application\SendUserDeactivationEmail\UserDeactivatedEventHandler:
+        tags: [ messenger.message_handler ]
+        arguments:
+            $sender: '%env(MAILER_SENDER)%'
+    App\Authentication\Application\DeactivateUser\DeactivateUserCommandHandler:
+        tags: [ messenger.message_handler ]
+    App\Authentication\Application\ActivateUser\ActivateUserCommandHandler:
+        tags: [ messenger.message_handler ]
 
     App\Authentication\Infrastructure\Doctrine\UserRepository: ~
     App\Authentication\Domain\UserRepositoryInterface: '@App\Authentication\Infrastructure\Doctrine\UserRepository'

@@ -9,6 +9,9 @@
         <field name="email" type="string" unique="true" />
         <field name="password" type="string" />
         <field name="roles" type="json" />
+        <field name="emailVerificationSlug" type="string" nullable="true" />
+        <field name="emailVerificationSlugExpiresAt" type="datetime_immutable" nullable="true" />
+        <field name="isActive" type="boolean" />
         <field name="createdAt" type="datetime_immutable" />
         <field name="updatedAt" type="datetime_immutable" />
     </entity>

@@ -1,5 +1,0 @@
-FROM nginx:latest
-
-COPY docker/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
-
-COPY public/index.php /var/www/html/public/index.php
