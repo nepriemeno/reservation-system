@@ -47,6 +47,7 @@ services:
     App\Authentication\Infrastructure\Doctrine\UserRepository: ~
     App\Authentication\Infrastructure\Symfony\UserPasswordValidator: ~
     App\Authentication\Infrastructure\Symfony\UserPasswordHasher: ~
+    App\Authentication\Infrastructure\Symfony\SecurityUserProvider: ~
     App\Authentication\Infrastructure\Lexik\JwtTokenCreator: ~
     App\Shared\Infrastructure\Symfony\UuidCreator: ~
     App\Shared\Infrastructure\Symfony\Bus\Even\EventBus: ~

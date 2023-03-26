@@ -6,6 +6,7 @@ namespace App\Authentication\Infrastructure\Lexik;
 
 use App\Authentication\Domain\JwtTokenCreatorInterface;
 use App\Authentication\Domain\User;
+use App\Authentication\Infrastructure\Symfony\SecurityUser;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 
 final class JwtTokenCreator implements JwtTokenCreatorInterface
@@ -16,6 +17,8 @@ final class JwtTokenCreator implements JwtTokenCreatorInterface
 
     public function create(User $user): string
     {
-        return $this->JWTTokenManager->create($user);
+        $securityUser = new SecurityUser($user);
+
+        return $this->JWTTokenManager->create($securityUser);
     }
 }

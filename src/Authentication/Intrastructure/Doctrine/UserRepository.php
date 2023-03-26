@@ -35,6 +35,11 @@ final class UserRepository extends ServiceEntityRepository implements UserReposi
         return $this->findOneBy(['email' => $email]);
     }
 
+    public function findOneByEmailActive(string $email): ?User
+    {
+        return $this->findOneBy(['email' => $email, 'isActive' => true]);
+    }
+
     public function findOneByEmailVerificationSlug(string $emailVerificationSlug): ?User
     {
         return $this->findOneBy(['emailVerificationSlug' => $emailVerificationSlug]);

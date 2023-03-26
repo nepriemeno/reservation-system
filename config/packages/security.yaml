@@ -6,10 +6,8 @@ security:
     providers:
         jwt:
             lexik_jwt: ~
-        app_user_provider:
-            entity:
-                class: 'App\Authentication\Domain\User'
-                property: email
+        app_security_user_provider:
+            id: App\Authentication\Infrastructure\Symfony\SecurityUserProvider
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -21,7 +19,7 @@ security:
                 check_path: /authentication/login
                 login_path: /authentication/login
                 username_path: email
-                provider: app_user_provider
+                provider: app_security_user_provider
 
         change_user_password:
             pattern: ^/authentication/change-user-password

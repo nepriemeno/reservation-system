@@ -16,6 +16,8 @@ final class UserPasswordHasher implements UserPasswordHasherInterface
 
     public function hashPassword(User $user, string $password): string
     {
-        return $this->userPasswordHasher->hashPassword($user, $password);
+        $securityUser = new SecurityUser($user);
+
+        return $this->userPasswordHasher->hashPassword($securityUser, $password);
     }
 }

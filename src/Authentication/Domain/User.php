@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace App\Authentication\Domain;
 
 use DateTimeImmutable;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
-final class User implements UserInterface, PasswordAuthenticatedUserInterface
+final class User
 {
     /**
      * @param string $uuid
@@ -63,6 +61,9 @@ final class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * @return string[]
+     */
     public function getRoles(): array
     {
         return $this->roles;
@@ -124,14 +125,5 @@ final class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->updatedAt = $updatedAt;
 
         return $this;
-    }
-
-    public function eraseCredentials(): void
-    {
-    }
-
-    public function getUserIdentifier(): string
-    {
-        return $this->getEmail();
     }
 }

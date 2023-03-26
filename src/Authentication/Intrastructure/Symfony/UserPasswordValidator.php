@@ -16,6 +16,8 @@ final class UserPasswordValidator implements UserPasswordValidatorInterface
 
     public function isPasswordValid(User $user, string $password): bool
     {
-        return $this->userPasswordHasher->isPasswordValid($user, $password);
+        $securityUser = new SecurityUser($user);
+
+        return $this->userPasswordHasher->isPasswordValid($securityUser, $password);
     }
 }
