@@ -28,12 +28,7 @@ final class UserEmailChangedEventHandler implements EventHandlerInterface
     {
         $uuid = $emailChangedEvent->getUuid();
         $email = $emailChangedEvent->getEmail();
-        $user = $this->userRepository->findOneByUuidActive($uuid);
-
-        if ($user === null) {
-            throw new UserNotFoundException();
-        }
-
+        $user = $this->userRepository->getOneByUuidActive($uuid);
         $encodedData = json_encode([$uuid, $email]);
 
         if ($encodedData === false) {

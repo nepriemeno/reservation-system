@@ -26,11 +26,7 @@ final class ChangeUserPasswordCommandHandler implements CommandHandlerInterface
         $uuid = $command->getUuid();
         $currentPassword = $command->getCurrentPassword();
         $password = $command->getPassword();
-        $user = $this->userRepository->findOneByUuidActive($uuid);
-
-        if ($user === null) {
-            throw new UserNotFoundException();
-        }
+        $user = $this->userRepository->getOneByUuidActive($uuid);
 
         if (!$this->userPasswordValidator->isPasswordValid($user, $currentPassword)) {
             throw new UserCurrentPasswordInvalidException();

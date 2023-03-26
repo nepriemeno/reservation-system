@@ -23,11 +23,7 @@ final class ChangeUserEmailCommandHandler implements CommandHandlerInterface
     {
         $uuid = $command->getUuid();
         $email = $command->getEmail();
-        $user = $this->userRepository->findOneByUuidActive($uuid);
-
-        if ($user === null) {
-            throw new UserNotFoundException();
-        }
+        $user = $this->userRepository->getOneByUuidActive($uuid);
 
         if ($this->userRepository->findOneByEmail($email) !== null) {
             throw new UserEmailAlreadyTakenException();

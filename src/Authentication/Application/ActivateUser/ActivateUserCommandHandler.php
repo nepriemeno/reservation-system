@@ -19,12 +19,7 @@ final class ActivateUserCommandHandler implements CommandHandlerInterface
     public function __invoke(ActivateUserCommand $command): void
     {
         $uuid = $command->getUuid();
-        $user = $this->userRepository->findOneByUuid($uuid);
-
-        if ($user === null) {
-            throw new UserNotFoundException();
-        }
-
+        $user = $this->userRepository->getOneByUuid($uuid);
         $user->activate();
         $this->userRepository->save($user);
     }

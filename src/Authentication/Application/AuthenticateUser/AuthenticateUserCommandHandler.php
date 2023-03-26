@@ -25,11 +25,7 @@ final class AuthenticateUserCommandHandler implements CommandHandlerInterface
     {
         $email = $command->getEmail();
         $password = $command->getPassword();
-        $user = $this->userRepository->findOneByEmailActive($email);
-
-        if ($user === null) {
-            throw new UserNotFoundException();
-        }
+        $user = $this->userRepository->getOneByEmailActive($email);
 
         if (!$this->userPasswordValidator->isPasswordValid($user, $password)) {
             throw new UserPasswordInvalidException();
