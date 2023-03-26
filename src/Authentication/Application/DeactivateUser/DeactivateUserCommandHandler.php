@@ -22,16 +22,14 @@ class DeactivateUserCommandHandler implements CommandHandlerInterface
     public function __invoke(DeactivateUserCommand $command): void
     {
         $uuid = $command->getUuid();
-        $user = $this->userRepository->findOneByUuid($uuid);
+        $user = $this->userRepository->findOneByUuidActive($uuid);
 
         if ($user === null) {
             throw new UserNotFoundException();
         }
 
-        if ($user->getIsActive()) {
-            $user->setIsActive(false);
-            $this->userRepository->save($user);
-            $this->bus->dispatch(new UserDeactivatedEvent($uuid));
-        }
+        $user->setIsActive(false);
+        $this->userRepository->save($user);
+        $this->bus->dispatch(new UserDeactivatedEvent($uuid));
     }
 }

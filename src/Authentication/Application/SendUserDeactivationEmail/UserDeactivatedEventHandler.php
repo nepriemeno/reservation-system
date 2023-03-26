@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Authentication\Application\SendUserDeactivationEmail;
 
-use App\Authentication\Domain\Exception\UserActiveException;
 use App\Authentication\Domain\Exception\UserNotFoundException;
 use App\Authentication\Domain\UserDeactivatedEvent;
 use App\Authentication\Domain\UserRepositoryInterface;
@@ -20,7 +19,7 @@ final class UserDeactivatedEventHandler implements EventHandlerInterface
     ) {
     }
 
-    /** @throws UserNotFoundException|UserActiveException */
+    /** @throws UserNotFoundException */
     public function __invoke(UserDeactivatedEvent $userDeactivatedEvent): void
     {
         $uuid = $userDeactivatedEvent->getUuid();
@@ -28,10 +27,6 @@ final class UserDeactivatedEventHandler implements EventHandlerInterface
 
         if ($user === null) {
             throw new UserNotFoundException();
-        }
-
-        if ($user->getIsActive()) {
-            throw new UserActiveException();
         }
 
         if ($user->getIsEmailVerified()) {

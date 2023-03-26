@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Authentication\Application\ChangeUserEmail;
 
 use App\Authentication\Domain\Exception\UserEmailAlreadyTakenException;
-use App\Authentication\Domain\Exception\UserNotActiveException;
 use App\Authentication\Domain\Exception\UserNotFoundException;
 use App\Authentication\Domain\UserEmailChangedEvent;
 use App\Authentication\Domain\UserRepositoryInterface;
@@ -21,19 +20,15 @@ final class ChangeUserEmailCommandHandler implements CommandHandlerInterface
     ) {
     }
 
-    /** @throws UserEmailAlreadyTakenException|UserNotFoundException|UserNotActiveException */
+    /** @throws UserEmailAlreadyTakenException|UserNotFoundException */
     public function __invoke(ChangeUserEmailCommand $command): void
     {
         $uuid = $command->getUuid();
         $email = $command->getEmail();
-        $user = $this->userRepository->findOneByUuid($uuid);
+        $user = $this->userRepository->findOneByUuidActive($uuid);
 
         if ($user === null) {
             throw new UserNotFoundException();
-        }
-
-        if (!$user->getIsActive()) {
-            throw new UserNotActiveException();
         }
 
         if ($this->userRepository->findOneByEmail($email) !== null) {

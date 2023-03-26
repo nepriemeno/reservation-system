@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Authentication\Application\AuthenticateUser;
 
-use App\Authentication\Domain\Exception\UserNotActiveException;
 use App\Authentication\Domain\Exception\UserNotFoundException;
 use App\Authentication\Domain\Exception\UserPasswordInvalidException;
 use App\Authentication\Domain\JwtTokenCreatorInterface;
@@ -21,19 +20,15 @@ final class AuthenticateUserCommandHandler implements CommandHandlerInterface
     ) {
     }
 
-    /** @throws UserNotFoundException|UserPasswordInvalidException|UserNotActiveException */
+    /** @throws UserNotFoundException|UserPasswordInvalidException */
     public function __invoke(AuthenticateUserCommand $command): string
     {
         $email = $command->getEmail();
         $password = $command->getPassword();
-        $user = $this->userRepository->findOneByEmail($email);
+        $user = $this->userRepository->findOneByEmailActive($email);
 
         if ($user === null) {
             throw new UserNotFoundException();
-        }
-
-        if (!$user->getIsActive()) {
-            throw new UserNotActiveException();
         }
 
         if (!$this->userPasswordValidator->isPasswordValid($user, $password)) {

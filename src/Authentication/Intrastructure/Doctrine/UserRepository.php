@@ -30,6 +30,11 @@ final class UserRepository extends ServiceEntityRepository implements UserReposi
         return $this->findOneBy(['uuid' => $uuid]);
     }
 
+    public function findOneByUuidActive(string $uuid): ?User
+    {
+        return $this->findOneBy(['uuid' => $uuid, 'isActive' => true]);
+    }
+
     public function findOneByEmail(string $email): ?User
     {
         return $this->findOneBy(['email' => $email]);
@@ -43,5 +48,10 @@ final class UserRepository extends ServiceEntityRepository implements UserReposi
     public function findOneByEmailVerificationSlug(string $emailVerificationSlug): ?User
     {
         return $this->findOneBy(['emailVerificationSlug' => $emailVerificationSlug]);
+    }
+
+    public function findOneByEmailVerificationSlugActive(string $emailVerificationSlug): ?User
+    {
+        return $this->findOneBy(['emailVerificationSlug' => $emailVerificationSlug, 'isActive' => true]);
     }
 }

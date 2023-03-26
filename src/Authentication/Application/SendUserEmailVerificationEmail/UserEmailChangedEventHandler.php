@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Authentication\Application\SendUserEmailVerificationEmail;
 
-use App\Authentication\Domain\Exception\UserNotActiveException;
 use App\Authentication\Domain\Exception\UserNotFoundException;
 use App\Authentication\Domain\UserEmailChangedEvent;
 use App\Authentication\Domain\UserRepositoryInterface;
@@ -25,19 +24,15 @@ final class UserEmailChangedEventHandler implements EventHandlerInterface
     ) {
     }
 
-    /** @throws UserNotFoundException|UserNotActiveException|JsonEncodeException */
+    /** @throws UserNotFoundException|JsonEncodeException */
     public function __invoke(UserEmailChangedEvent $emailChangedEvent): void
     {
         $uuid = $emailChangedEvent->getUuid();
         $email = $emailChangedEvent->getEmail();
-        $user = $this->userRepository->findOneByUuid($uuid);
+        $user = $this->userRepository->findOneByUuidActive($uuid);
 
         if ($user === null) {
             throw new UserNotFoundException();
-        }
-
-        if (!$user->getIsActive()) {
-            throw new UserNotActiveException();
         }
 
         $encodedData = json_encode([$uuid, $email]);

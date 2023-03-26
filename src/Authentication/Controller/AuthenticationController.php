@@ -27,6 +27,14 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
+// fix controller
+// fix endpoint names, status codes
+// write tests
+// implement query
+// make emails async
+// write api docs
+// go to other modules
+
 #[AsController]
 final class AuthenticationController extends ApiController
 {

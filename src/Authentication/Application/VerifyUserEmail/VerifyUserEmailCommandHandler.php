@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Authentication\Application\VerifyUserEmail;
 
 use App\Authentication\Domain\Exception\UserEmailVerificationUrlInvalidException;
-use App\Authentication\Domain\Exception\UserNotActiveException;
 use App\Authentication\Domain\UserRepositoryInterface;
 use App\Shared\Domain\Bus\Command\CommandHandlerInterface;
 use DateTimeImmutable;
@@ -17,18 +16,14 @@ final class VerifyUserEmailCommandHandler implements CommandHandlerInterface
     ) {
     }
 
-    /** @throws UserEmailVerificationUrlInvalidException|UserNotActiveException */
+    /** @throws UserEmailVerificationUrlInvalidException */
     public function __invoke(VerifyUserEmailCommand $command): void
     {
         $emailVerificationSlug = $command->getEmailVerificationSlug();
-        $user = $this->userRepository->findOneByEmailVerificationSlug($emailVerificationSlug);
+        $user = $this->userRepository->findOneByEmailVerificationSlugActive($emailVerificationSlug);
 
         if ($user === null || $user->getEmailVerificationSlugExpiresAt() <= new DateTimeImmutable()) {
             throw new UserEmailVerificationUrlInvalidException();
-        }
-
-        if (!$user->getIsActive()) {
-            throw new UserNotActiveException();
         }
 
         $user->setEmailVerificationSlug(null);
