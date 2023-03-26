@@ -14,8 +14,10 @@ final class EventBus implements EventBusInterface
     {
     }
 
-    public function dispatch(EventInterface $event): void
+    public function dispatch(EventInterface ...$events): void
     {
-        $this->bus->dispatch($event);
+        foreach ($events as $event) {
+            $this->bus->dispatch($event);
+        }
     }
 }

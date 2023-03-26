@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Authentication\Application\DeactivateUser;
 
 use App\Authentication\Domain\Exception\UserNotFoundException;
-use App\Authentication\Domain\UserDeactivatedEvent;
 use App\Authentication\Domain\UserRepositoryInterface;
 use App\Shared\Domain\Bus\Command\CommandHandlerInterface;
 use App\Shared\Domain\Bus\Event\EventBusInterface;
@@ -30,6 +29,6 @@ class DeactivateUserCommandHandler implements CommandHandlerInterface
 
         $user->deactivate();
         $this->userRepository->save($user);
-        $this->bus->dispatch(new UserDeactivatedEvent($uuid));
+        $this->bus->dispatch(...$user->getEvents());
     }
 }

@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Authentication\Domain;
 
+use App\Shared\Domain\AggregateRoot;
 use DateTimeImmutable;
 
-final class User
+final class User extends AggregateRoot
 {
     /**
      * @param string $uuid
@@ -46,6 +47,7 @@ final class User
     {
         $this->email = $email;
         $this->setEmailVerificationSlugExpiresAt(new DateTimeImmutable());
+        $this->addEvent(new UserEmailChangedEvent($this->getUuid(), $this->getEmail()));
 
         return $this;
     }
@@ -131,6 +133,7 @@ final class User
     public function deactivate(): void
     {
         $this->setIsActive(true);
+        $this->addEvent(new UserDeactivatedEvent($this->getUuid()));
     }
 
     public function getCreatedAt(): DateTimeImmutable

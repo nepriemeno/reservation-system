@@ -6,7 +6,6 @@ namespace App\Authentication\Application\ChangeUserEmail;
 
 use App\Authentication\Domain\Exception\UserEmailAlreadyTakenException;
 use App\Authentication\Domain\Exception\UserNotFoundException;
-use App\Authentication\Domain\UserEmailChangedEvent;
 use App\Authentication\Domain\UserRepositoryInterface;
 use App\Shared\Domain\Bus\Command\CommandHandlerInterface;
 use App\Shared\Domain\Bus\Event\EventBusInterface;
@@ -36,6 +35,6 @@ final class ChangeUserEmailCommandHandler implements CommandHandlerInterface
 
         $user->setEmail($email);
         $this->userRepository->save($user);
-        $this->bus->dispatch(new UserEmailChangedEvent($uuid, $email));
+        $this->bus->dispatch(...$user->getEvents());
     }
 }
