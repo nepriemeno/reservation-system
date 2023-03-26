@@ -7,7 +7,6 @@ namespace App\Authentication\Application\VerifyUserEmail;
 use App\Authentication\Domain\Exception\UserEmailVerificationUrlInvalidException;
 use App\Authentication\Domain\UserRepositoryInterface;
 use App\Shared\Domain\Bus\Command\CommandHandlerInterface;
-use DateTimeImmutable;
 
 final class VerifyUserEmailCommandHandler implements CommandHandlerInterface
 {
@@ -22,12 +21,11 @@ final class VerifyUserEmailCommandHandler implements CommandHandlerInterface
         $emailVerificationSlug = $command->getEmailVerificationSlug();
         $user = $this->userRepository->findOneByEmailVerificationSlugActive($emailVerificationSlug);
 
-        if ($user === null || $user->getEmailVerificationSlugExpiresAt() <= new DateTimeImmutable()) {
+        if ($user === null || $user->isEmailVerificationSlugValid()) {
             throw new UserEmailVerificationUrlInvalidException();
         }
 
-        $user->setEmailVerificationSlug(null);
-        $user->setEmailVerificationSlugExpiresAt(null);
+        $user->verifyEmail();
         $this->userRepository->save($user);
     }
 }

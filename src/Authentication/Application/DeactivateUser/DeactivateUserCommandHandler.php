@@ -28,7 +28,7 @@ class DeactivateUserCommandHandler implements CommandHandlerInterface
             throw new UserNotFoundException();
         }
 
-        $user->setIsActive(false);
+        $user->deactivate();
         $this->userRepository->save($user);
         $this->bus->dispatch(new UserDeactivatedEvent($uuid));
     }

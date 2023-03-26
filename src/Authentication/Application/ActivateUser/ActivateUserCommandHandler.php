@@ -25,7 +25,7 @@ final class ActivateUserCommandHandler implements CommandHandlerInterface
             throw new UserNotFoundException();
         }
 
-        $user->setIsActive(true);
+        $user->activate();
         $this->userRepository->save($user);
     }
 }

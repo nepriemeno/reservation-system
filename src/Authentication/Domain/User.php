@@ -45,8 +45,20 @@ final class User
     public function setEmail(string $email): self
     {
         $this->email = $email;
+        $this->setEmailVerificationSlugExpiresAt(new DateTimeImmutable());
 
         return $this;
+    }
+
+    public function verifyEmail(): void
+    {
+        $this->setEmailVerificationSlug(null);
+        $this->setEmailVerificationSlugExpiresAt(null);
+    }
+
+    public function isEmailVerified(): bool
+    {
+        return $this->getEmailVerificationSlug() === null && $this->getEmailVerificationSlugExpiresAt() === null;
     }
 
     public function getPassword(): ?string
@@ -69,11 +81,6 @@ final class User
         return $this->roles;
     }
 
-    public function getIsEmailVerified(): bool
-    {
-        return $this->getEmailVerificationSlug() === null && $this->getEmailVerificationSlugExpiresAt() === null;
-    }
-
     public function getEmailVerificationSlug(): ?string
     {
         return $this->emailVerificationSlug;
@@ -82,6 +89,7 @@ final class User
     public function setEmailVerificationSlug(?string $emailVerificationSlug): self
     {
         $this->emailVerificationSlug = $emailVerificationSlug;
+        $this->setEmailVerificationSlugExpiresAt(new DateTimeImmutable('+30 minutes'));
 
         return $this;
     }
@@ -98,6 +106,11 @@ final class User
         return $this;
     }
 
+    public function isEmailVerificationSlugValid(): bool
+    {
+        return $this->getEmailVerificationSlugExpiresAt() < new DateTimeImmutable();
+    }
+
     public function getIsActive(): bool
     {
         return $this->isActive;
@@ -108,6 +121,16 @@ final class User
         $this->isActive = $isActive;
 
         return $this;
+    }
+
+    public function activate(): void
+    {
+        $this->setIsActive(true);
+    }
+
+    public function deactivate(): void
+    {
+        $this->setIsActive(true);
     }
 
     public function getCreatedAt(): DateTimeImmutable

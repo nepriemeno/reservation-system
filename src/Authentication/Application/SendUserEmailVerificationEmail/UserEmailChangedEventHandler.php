@@ -11,7 +11,6 @@ use App\Shared\Domain\Bus\Event\EventHandlerInterface;
 use App\Shared\Domain\EmailSenderInterface;
 use App\Shared\Domain\Exception\JsonEncodeException;
 use App\Shared\Domain\UrlCreatorInterface;
-use DateTimeImmutable;
 
 final class UserEmailChangedEventHandler implements EventHandlerInterface
 {
@@ -45,7 +44,6 @@ final class UserEmailChangedEventHandler implements EventHandlerInterface
             base64_encode(hash_hmac('sha256', $encodedData, $this->secret, true))
         );
         $user->setEmailVerificationSlug($emailVerificationSlug);
-        $user->setEmailVerificationSlugExpiresAt(new DateTimeImmutable('+30 minutes'));
         $this->userRepository->save($user);
         $this->emailSender->send(
             $this->sender,

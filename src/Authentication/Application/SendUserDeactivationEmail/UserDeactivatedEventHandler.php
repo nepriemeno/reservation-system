@@ -29,7 +29,7 @@ final class UserDeactivatedEventHandler implements EventHandlerInterface
             throw new UserNotFoundException();
         }
 
-        if ($user->getIsEmailVerified()) {
+        if ($user->isEmailVerified()) {
             $this->emailSender->send(
                 $this->sender,
                 $user->getEmail(),

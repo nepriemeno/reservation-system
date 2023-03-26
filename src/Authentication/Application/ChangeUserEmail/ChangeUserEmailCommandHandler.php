@@ -10,7 +10,6 @@ use App\Authentication\Domain\UserEmailChangedEvent;
 use App\Authentication\Domain\UserRepositoryInterface;
 use App\Shared\Domain\Bus\Command\CommandHandlerInterface;
 use App\Shared\Domain\Bus\Event\EventBusInterface;
-use DateTimeImmutable;
 
 final class ChangeUserEmailCommandHandler implements CommandHandlerInterface
 {
@@ -36,7 +35,6 @@ final class ChangeUserEmailCommandHandler implements CommandHandlerInterface
         }
 
         $user->setEmail($email);
-        $user->setEmailVerificationSlugExpiresAt(new DateTimeImmutable());
         $this->userRepository->save($user);
         $this->bus->dispatch(new UserEmailChangedEvent($uuid, $email));
     }
