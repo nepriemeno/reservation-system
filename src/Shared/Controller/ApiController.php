@@ -36,7 +36,6 @@ abstract class ApiController
             $parameters,
             $constraint
         );
-
         $messages = ['message' => 'validation_failed', 'errors' => []];
 
         /** @var ConstraintViolation $violation */

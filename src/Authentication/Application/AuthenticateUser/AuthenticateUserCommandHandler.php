@@ -7,17 +7,17 @@ namespace App\Authentication\Application\AuthenticateUser;
 use App\Authentication\Domain\Exception\UserNotActiveException;
 use App\Authentication\Domain\Exception\UserNotFoundException;
 use App\Authentication\Domain\Exception\UserPasswordInvalidException;
+use App\Authentication\Domain\JwtTokenCreatorInterface;
+use App\Authentication\Domain\UserPasswordValidatorInterface;
 use App\Authentication\Domain\UserRepositoryInterface;
 use App\Shared\Domain\Bus\Command\CommandHandlerInterface;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 final class AuthenticateUserCommandHandler implements CommandHandlerInterface
 {
     public function __construct(
         private readonly UserRepositoryInterface $userRepository,
-        private readonly UserPasswordHasherInterface $userPasswordHasher,
-        private readonly JWTTokenManagerInterface $JWTTokenManager,
+        private readonly UserPasswordValidatorInterface $userPasswordValidator,
+        private readonly JwtTokenCreatorInterface $jwtTokenCreator,
     ) {
     }
 
@@ -36,10 +36,10 @@ final class AuthenticateUserCommandHandler implements CommandHandlerInterface
             throw new UserNotActiveException();
         }
 
-        if (!$this->userPasswordHasher->isPasswordValid($user, $password)) {
+        if (!$this->userPasswordValidator->isPasswordValid($user, $password)) {
             throw new UserPasswordInvalidException();
         }
 
-        return $this->JWTTokenManager->create($user);
+        return $this->jwtTokenCreator->create($user);
     }
 }

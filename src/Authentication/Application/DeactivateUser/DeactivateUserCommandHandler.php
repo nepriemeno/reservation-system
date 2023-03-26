@@ -8,14 +8,13 @@ use App\Authentication\Domain\Exception\UserNotFoundException;
 use App\Authentication\Domain\UserDeactivatedEvent;
 use App\Authentication\Domain\UserRepositoryInterface;
 use App\Shared\Domain\Bus\Command\CommandHandlerInterface;
-use DateTimeImmutable;
-use Symfony\Component\Messenger\MessageBusInterface;
+use App\Shared\Domain\Bus\Event\EventBusInterface;
 
 class DeactivateUserCommandHandler implements CommandHandlerInterface
 {
     public function __construct(
         private readonly UserRepositoryInterface $userRepository,
-        private readonly MessageBusInterface $bus,
+        private readonly EventBusInterface $bus,
     ) {
     }
 
@@ -31,7 +30,6 @@ class DeactivateUserCommandHandler implements CommandHandlerInterface
 
         if ($user->getIsActive()) {
             $user->setIsActive(false);
-            $user->setUpdatedAt(new DateTimeImmutable());
             $this->userRepository->save($user);
             $this->bus->dispatch(new UserDeactivatedEvent($uuid));
         }

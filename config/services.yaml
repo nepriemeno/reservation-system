@@ -1,18 +1,10 @@
-# This file is the entry point to configure your own services.
-# Files in the packages/ subdirectory configure your dependencies.
-
-# Put parameters here that don't need to change on each machine where the app is deployed
-# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
 
 services:
-    # default configuration for services in *this* file
     _defaults:
-        autowire: true      # Automatically injects dependencies in your services.
-        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        autowire: true
+        autoconfigure: true
 
-    # makes classes in src/ available to be used as services
-    # this creates a service per class whose id is the fully-qualified class name
     App\:
         resource: '../src/'
         exclude:
@@ -21,28 +13,50 @@ services:
             - '../src/Kernel.php'
 
     App\Authentication\Application\CreateUser\CreateUserCommandHandler:
-        tags: [messenger.message_handler]
+        tags: [ messenger.message_handler ]
+
     App\Authentication\Application\ChangeUserEmail\ChangeUserEmailCommandHandler:
         tags: [ messenger.message_handler ]
+
     App\Authentication\Application\ChangeUserPassword\ChangeUserPasswordCommandHandler:
         tags: [ messenger.message_handler ]
+
     App\Authentication\Application\VerifyUserEmail\VerifyUserEmailCommandHandler:
         tags: [ messenger.message_handler ]
+
     App\Authentication\Application\AuthenticateUser\AuthenticateUserCommandHandler:
         tags: [ messenger.message_handler ]
+
     App\Authentication\Application\SendUserEmailVerificationEmail\UserEmailChangedEventHandler:
         tags: [ messenger.message_handler ]
         arguments:
             $secret: '%env(APP_SECRET)%'
             $sender: '%env(MAILER_SENDER)%'
+
     App\Authentication\Application\SendUserDeactivationEmail\UserDeactivatedEventHandler:
         tags: [ messenger.message_handler ]
         arguments:
             $sender: '%env(MAILER_SENDER)%'
+
     App\Authentication\Application\DeactivateUser\DeactivateUserCommandHandler:
         tags: [ messenger.message_handler ]
+
     App\Authentication\Application\ActivateUser\ActivateUserCommandHandler:
         tags: [ messenger.message_handler ]
 
     App\Authentication\Infrastructure\Doctrine\UserRepository: ~
+    App\Authentication\Infrastructure\Symfony\UserPasswordValidator: ~
+    App\Authentication\Infrastructure\Symfony\UserPasswordHasher: ~
+    App\Authentication\Infrastructure\Lexik\JwtTokenCreator: ~
+    App\Shared\Infrastructure\Symfony\UuidCreator: ~
+    App\Shared\Infrastructure\Symfony\Bus\Even\EventBus: ~
+    App\Shared\Infrastructure\Symfony\EmailSender: ~
+    App\Shared\Infrastructure\Symfony\UrlCreator: ~
+
     App\Authentication\Domain\UserRepositoryInterface: '@App\Authentication\Infrastructure\Doctrine\UserRepository'
+    App\Authentication\Domain\UserPasswordValidatorInterface: '@App\Authentication\Infrastructure\Symfony\UserPasswordValidator'
+    App\Authentication\Domain\JwtTokenCreatorInterface: '@App\Authentication\Infrastructure\Lexik\JwtTokenCreator'
+    App\Authentication\Domain\UserPasswordHasherInterface: '@App\Authentication\Infrastructure\Symfony\UserPasswordHasher'
+    App\Shared\Infrastructure\Symfony\UuidCreatorInterface: '@App\Shared\Infrastructure\Symfony\UuidCreator'
+    App\Shared\Infrastructure\Symfony\Bus\Even\EventBusInterface: '@App\Shared\Infrastructure\Symfony\Bus\Even\EventBus'
+    App\Shared\Infrastructure\Symfony\UrlCreatorInterface: '@App\Shared\Infrastructure\Symfony\UrlCreator'

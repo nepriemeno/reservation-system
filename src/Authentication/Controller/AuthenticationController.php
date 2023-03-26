@@ -30,7 +30,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[AsController]
 final class AuthenticationController extends ApiController
 {
-    #[Route('/api/authentication/register', methods: ['POST'])]
+    #[Route('/authentication/register', methods: ['POST'])]
     public function register(Request $request, MessageBusInterface $bus): JsonResponse
     {
         try {
@@ -75,7 +75,7 @@ final class AuthenticationController extends ApiController
         );
     }
 
-    #[Route('/api/authentication/login', name: 'login', methods: ['POST'])]
+    #[Route('/authentication/login', name: 'login', methods: ['POST'])]
     public function login(Request $request, MessageBusInterface $bus): JsonResponse
     {
         try {
@@ -124,7 +124,7 @@ final class AuthenticationController extends ApiController
         );
     }
 
-    #[Route('/api/authentication/change-user-password', methods: ['POST'])]
+    #[Route('/authentication/change-user-password', methods: ['POST'])]
     public function changeUserPassword(
         TokenStorageInterface $tokenStorageInterface,
         JWTTokenManagerInterface $jwtManager,
@@ -187,7 +187,7 @@ final class AuthenticationController extends ApiController
         );
     }
 
-    #[Route('/api/authentication/change-user-email', methods: ['POST'])]
+    #[Route('/authentication/change-user-email', methods: ['POST'])]
     public function changeUserEmail(
         TokenStorageInterface $tokenStorageInterface,
         JWTTokenManagerInterface $jwtManager,
@@ -245,7 +245,7 @@ final class AuthenticationController extends ApiController
         );
     }
 
-    #[Route('/api/authentication/verify-user-email/{verificationSlug}', name: 'verify-user-email', methods: ['GET'])]
+    #[Route('/authentication/verify-user-email/{verificationSlug}', name: 'verify-user-email', methods: ['GET'])]
     public function verifyUserEmail(MessageBusInterface $bus, string $verificationSlug): JsonResponse
     {
         $command = new VerifyUserEmailCommand($verificationSlug);
@@ -266,7 +266,7 @@ final class AuthenticationController extends ApiController
         );
     }
 
-    #[Route('/api/authentication/deactivate-user', name: 'deactivate-user', methods: ['POST'])]
+    #[Route('/authentication/deactivate-user', name: 'deactivate-user', methods: ['POST'])]
     public function deactivateUser(Request $request, MessageBusInterface $bus): JsonResponse
     {
         try {
@@ -307,7 +307,7 @@ final class AuthenticationController extends ApiController
         );
     }
 
-    #[Route('/api/authentication/activate-user', name: 'activate-user', methods: ['POST'])]
+    #[Route('/authentication/activate-user', name: 'activate-user', methods: ['POST'])]
     public function activateUser(Request $request, MessageBusInterface $bus): JsonResponse
     {
         try {

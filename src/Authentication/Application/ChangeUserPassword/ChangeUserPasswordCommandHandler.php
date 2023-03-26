@@ -7,15 +7,16 @@ namespace App\Authentication\Application\ChangeUserPassword;
 use App\Authentication\Domain\Exception\UserCurrentPasswordInvalidException;
 use App\Authentication\Domain\Exception\UserNotActiveException;
 use App\Authentication\Domain\Exception\UserNotFoundException;
+use App\Authentication\Domain\UserPasswordHasherInterface;
+use App\Authentication\Domain\UserPasswordValidatorInterface;
 use App\Authentication\Domain\UserRepositoryInterface;
 use App\Shared\Domain\Bus\Command\CommandHandlerInterface;
-use DateTimeImmutable;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 final class ChangeUserPasswordCommandHandler implements CommandHandlerInterface
 {
     public function __construct(
         private readonly UserRepositoryInterface $userRepository,
+        private readonly UserPasswordValidatorInterface $userPasswordValidator,
         private readonly UserPasswordHasherInterface $userPasswordHasher,
     ) {
     }
@@ -36,17 +37,12 @@ final class ChangeUserPasswordCommandHandler implements CommandHandlerInterface
             throw new UserNotActiveException();
         }
 
-        if (!$this->userPasswordHasher->isPasswordValid($user, $currentPassword)) {
+        if (!$this->userPasswordValidator->isPasswordValid($user, $currentPassword)) {
             throw new UserCurrentPasswordInvalidException();
         }
 
-        $hashedPassword = $this->userPasswordHasher->hashPassword(
-            $user,
-            $password
-        );
-
+        $hashedPassword = $this->userPasswordHasher->hashPassword($user, $password);
         $user->setPassword($hashedPassword);
-        $user->setUpdatedAt(new DateTimeImmutable());
         $this->userRepository->save($user);
     }
 }

@@ -9,25 +9,23 @@ use App\Authentication\Domain\Exception\UserNotFoundException;
 use App\Authentication\Domain\UserEmailChangedEvent;
 use App\Authentication\Domain\UserRepositoryInterface;
 use App\Shared\Domain\Bus\Event\EventHandlerInterface;
+use App\Shared\Domain\EmailSenderInterface;
 use App\Shared\Domain\Exception\JsonEncodeException;
+use App\Shared\Domain\UrlCreatorInterface;
 use DateTimeImmutable;
-use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 final class UserEmailChangedEventHandler implements EventHandlerInterface
 {
     public function __construct(
-        private readonly MailerInterface $mailer,
+        private readonly EmailSenderInterface $emailSender,
         private readonly UserRepositoryInterface $userRepository,
-        private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly UrlCreatorInterface $urlCreator,
         private readonly string $secret,
         private readonly string $sender,
     ) {
     }
 
-    /** @throws UserNotFoundException|UserNotActiveException|JsonEncodeException|TransportExceptionInterface */
+    /** @throws UserNotFoundException|UserNotActiveException|JsonEncodeException */
     public function __invoke(UserEmailChangedEvent $emailChangedEvent): void
     {
         $uuid = $emailChangedEvent->getUuid();
@@ -53,20 +51,17 @@ final class UserEmailChangedEventHandler implements EventHandlerInterface
         );
         $user->setEmailVerificationSlug($emailVerificationSlug);
         $user->setEmailVerificationSlugExpiresAt(new DateTimeImmutable('+30 minutes'));
-        $user->setUpdatedAt(new DateTimeImmutable());
         $this->userRepository->save($user);
-        $mail = (new Email())
-            ->from($this->sender)
-            ->to($email)
-            ->subject('authentication.application.send_user_email_verification_email.verify_email')
-            ->text(
-                'authentication.application.send_user_email_verification_email.verification_url: ' .
-                    $this->urlGenerator->generate(
-                        'verify-user-email',
-                        ['verificationSlug' => $emailVerificationSlug],
-                        UrlGeneratorInterface::ABSOLUTE_URL
-                    )
-            );
-        $this->mailer->send($mail);
+        $this->emailSender->send(
+            $this->sender,
+            $email,
+            'authentication.application.send_user_email_verification_email.verify_email',
+            'authentication.application.send_user_email_verification_email.verification_url: ' .
+            $this->urlCreator->create(
+                'verify-user-email',
+                ['verificationSlug' => $emailVerificationSlug],
+                0
+            )
+        );
     }
 }

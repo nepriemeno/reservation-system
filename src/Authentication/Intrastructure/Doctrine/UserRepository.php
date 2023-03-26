@@ -6,11 +6,12 @@ namespace App\Authentication\Infrastructure\Doctrine;
 
 use App\Authentication\Domain\User;
 use App\Authentication\Domain\UserRepositoryInterface;
+use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /** @template-extends ServiceEntityRepository<User> */
-class UserRepository extends ServiceEntityRepository implements UserRepositoryInterface
+final class UserRepository extends ServiceEntityRepository implements UserRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -19,6 +20,7 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
 
     public function save(User $user): void
     {
+        $user->setUpdatedAt(new DateTimeImmutable());
         $this->_em->persist($user);
         $this->_em->flush();
     }

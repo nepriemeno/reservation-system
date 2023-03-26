@@ -9,20 +9,18 @@ use App\Authentication\Domain\Exception\UserNotFoundException;
 use App\Authentication\Domain\UserDeactivatedEvent;
 use App\Authentication\Domain\UserRepositoryInterface;
 use App\Shared\Domain\Bus\Event\EventHandlerInterface;
-use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
+use App\Shared\Domain\EmailSenderInterface;
 
 final class UserDeactivatedEventHandler implements EventHandlerInterface
 {
     public function __construct(
-        private readonly MailerInterface $mailer,
+        private readonly EmailSenderInterface $emailSender,
         private readonly UserRepositoryInterface $userRepository,
         private readonly string $sender,
     ) {
     }
 
-    /** @throws UserNotFoundException|UserActiveException|TransportExceptionInterface */
+    /** @throws UserNotFoundException|UserActiveException */
     public function __invoke(UserDeactivatedEvent $userDeactivatedEvent): void
     {
         $uuid = $userDeactivatedEvent->getUuid();
@@ -37,12 +35,12 @@ final class UserDeactivatedEventHandler implements EventHandlerInterface
         }
 
         if ($user->getIsEmailVerified()) {
-            $mail = (new Email())
-                ->from($this->sender)
-                ->to($user->getEmail())
-                ->subject('authentication.application.send_user_deactivation_email.account_deactivated')
-                ->text('authentication.application.send_user_deactivation_email.account_deactivated');
-            $this->mailer->send($mail);
+            $this->emailSender->send(
+                $this->sender,
+                $user->getEmail(),
+                'authentication.application.send_user_deactivation_email.account_deactivated',
+                'authentication.application.send_user_deactivation_email.account_deactivated'
+            );
         }
     }
 }

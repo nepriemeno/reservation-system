@@ -33,7 +33,6 @@ final class VerifyUserEmailCommandHandler implements CommandHandlerInterface
 
         $user->setEmailVerificationSlug(null);
         $user->setEmailVerificationSlugExpiresAt(null);
-        $user->setUpdatedAt(new DateTimeImmutable());
         $this->userRepository->save($user);
     }
 }

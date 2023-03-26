@@ -10,14 +10,14 @@ use App\Authentication\Domain\Exception\UserNotFoundException;
 use App\Authentication\Domain\UserEmailChangedEvent;
 use App\Authentication\Domain\UserRepositoryInterface;
 use App\Shared\Domain\Bus\Command\CommandHandlerInterface;
+use App\Shared\Domain\Bus\Event\EventBusInterface;
 use DateTimeImmutable;
-use Symfony\Component\Messenger\MessageBusInterface;
 
 final class ChangeUserEmailCommandHandler implements CommandHandlerInterface
 {
     public function __construct(
         private readonly UserRepositoryInterface $userRepository,
-        private readonly MessageBusInterface $bus,
+        private readonly EventBusInterface $bus,
     ) {
     }
 
@@ -42,7 +42,6 @@ final class ChangeUserEmailCommandHandler implements CommandHandlerInterface
 
         $user->setEmail($email);
         $user->setEmailVerificationSlugExpiresAt(new DateTimeImmutable());
-        $user->setUpdatedAt(new DateTimeImmutable());
         $this->userRepository->save($user);
         $this->bus->dispatch(new UserEmailChangedEvent($uuid, $email));
     }
