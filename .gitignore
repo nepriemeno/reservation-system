@@ -8,9 +8,12 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
+
 .php-cs-fixer.cache
+.phpunit.result.cache
 /tools/php-cs-fixer/vendor
 /tools/phpstan/vendor
+/tools/phpunit/vendor
 /.idea
 
 ###> lexik/jwt-authentication-bundle ###

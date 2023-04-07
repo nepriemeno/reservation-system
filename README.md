@@ -13,6 +13,10 @@ PHPSTAN:
 ````
 tools/phpstan/vendor/bin/phpstan analyse src tests
 ````
+PHPUNIT:
+````
+tools/phpunit/vendor/bin/phpunit tests
+````
 JWT:
 ````
 bin/console lexik:jwt:generate-keypair --skip-if-exists
