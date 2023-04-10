@@ -17,7 +17,7 @@ final class JwtTokenCreator implements JwtTokenCreatorInterface
 
     public function create(User $user): string
     {
-        $securityUser = new SecurityUser($user);
+        $securityUser = new SecurityUser($user->getUuid(), $user->getPassword(), $user->getRoles());
 
         return $this->JWTTokenManager->create($securityUser);
     }

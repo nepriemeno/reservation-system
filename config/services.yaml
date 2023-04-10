@@ -17,6 +17,8 @@ services:
 
     App\Authentication\Application\ChangeUserEmail\ChangeUserEmailCommandHandler:
         tags: [ messenger.message_handler ]
+        arguments:
+            $secret: '%env(APP_SECRET)%'
 
     App\Authentication\Application\ChangeUserPassword\ChangeUserPasswordCommandHandler:
         tags: [ messenger.message_handler ]
@@ -30,7 +32,6 @@ services:
     App\Authentication\Application\SendUserEmailVerificationEmail\UserEmailChangedEventHandler:
         tags: [ messenger.message_handler ]
         arguments:
-            $secret: '%env(APP_SECRET)%'
             $sender: '%env(MAILER_SENDER)%'
 
     App\Authentication\Application\SendUserDeactivationEmail\UserDeactivatedEventHandler:
@@ -44,6 +45,9 @@ services:
     App\Authentication\Application\ActivateUser\ActivateUserCommandHandler:
         tags: [ messenger.message_handler ]
 
+    App\Shared\Application\ConsumeOutboxMessages\ConsumeOutboxMessagesCommandHandler:
+        tags: [ messenger.message_handler ]
+
     App\Authentication\Infrastructure\Doctrine\UserRepository: ~
     App\Authentication\Infrastructure\Symfony\UserPasswordValidator: ~
     App\Authentication\Infrastructure\Symfony\UserPasswordHasher: ~
@@ -53,11 +57,13 @@ services:
     App\Shared\Infrastructure\Symfony\Bus\Even\EventBus: ~
     App\Shared\Infrastructure\Symfony\EmailSender: ~
     App\Shared\Infrastructure\Symfony\UrlCreator: ~
+    App\Shared\Infrastructure\Doctrine\OutboxMessageRepository: ~
 
     App\Authentication\Domain\UserRepositoryInterface: '@App\Authentication\Infrastructure\Doctrine\UserRepository'
     App\Authentication\Domain\UserPasswordValidatorInterface: '@App\Authentication\Infrastructure\Symfony\UserPasswordValidator'
     App\Authentication\Domain\JwtTokenCreatorInterface: '@App\Authentication\Infrastructure\Lexik\JwtTokenCreator'
     App\Authentication\Domain\UserPasswordHasherInterface: '@App\Authentication\Infrastructure\Symfony\UserPasswordHasher'
+    App\Shared\Domain\OutboxMessageRepositoryInterface: '@App\Shared\Infrastructure\Doctrine\OutboxMessageRepository'
     App\Shared\Infrastructure\Symfony\UuidCreatorInterface: '@App\Shared\Infrastructure\Symfony\UuidCreator'
     App\Shared\Infrastructure\Symfony\Bus\Even\EventBusInterface: '@App\Shared\Infrastructure\Symfony\Bus\Even\EventBus'
     App\Shared\Infrastructure\Symfony\UrlCreatorInterface: '@App\Shared\Infrastructure\Symfony\UrlCreator'

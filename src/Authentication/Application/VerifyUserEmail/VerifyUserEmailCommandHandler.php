@@ -7,6 +7,7 @@ namespace App\Authentication\Application\VerifyUserEmail;
 use App\Authentication\Domain\Exception\UserEmailVerificationUrlInvalidException;
 use App\Authentication\Domain\UserRepositoryInterface;
 use App\Shared\Domain\Bus\Command\CommandHandlerInterface;
+use Doctrine\DBAL\Exception;
 
 final class VerifyUserEmailCommandHandler implements CommandHandlerInterface
 {
@@ -15,7 +16,8 @@ final class VerifyUserEmailCommandHandler implements CommandHandlerInterface
     ) {
     }
 
-    /** @throws UserEmailVerificationUrlInvalidException */
+    /** @throws UserEmailVerificationUrlInvalidException|Exception
+     */
     public function __invoke(VerifyUserEmailCommand $command): void
     {
         $emailVerificationSlug = $command->getEmailVerificationSlug();

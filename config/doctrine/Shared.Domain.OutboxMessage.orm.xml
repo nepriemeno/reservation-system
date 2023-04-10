@@ -1,0 +1,17 @@
+<doctrine-mapping xmlns="https://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="https://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Shared\Domain\OutboxMessage"
+            table="outbox_messages"
+            repository-class="App\Shared\Infrastructure\Doctrine\OutboxMessageRepository"
+    >
+        <id name="uuid" type="guid" />
+        <field name="type" type="string" />
+        <field name="content" type="json" />
+        <field name="createdAt" type="datetime_immutable" />
+        <field name="processedAt" type="datetime_immutable" nullable="true" />
+    </entity>
+
+</doctrine-mapping>

@@ -33,6 +33,6 @@ class SecurityUserProvider implements UserProviderInterface
             throw new UserNotFoundException();
         }
 
-        return new SecurityUser($user);
+        return new SecurityUser($user->getUuid(), $user->getPassword(), $user->getRoles());
     }
 }

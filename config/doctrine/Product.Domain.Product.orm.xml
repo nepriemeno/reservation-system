@@ -1,0 +1,21 @@
+<doctrine-mapping xmlns="https://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="https://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Product\Domain\Product"
+            table="products"
+            repository-class="App\Product\Infrastructure\Doctrine\ProductRepository"
+    >
+        <id name="uuid" type="guid" />
+        <many-to-one field="userUuid" target-entity="App\Authentication\Domain\User" type="guid">
+            <join-column name="user_uuid" referenced-column-name="uuid" nullable="false" />
+        </many-to-one>
+        <field name="name" type="string" />
+        <field name="description" type="string" />
+        <field name="isActive" type="boolean" />
+        <field name="createdAt" type="datetime_immutable" />
+        <field name="updatedAt" type="datetime_immutable" />
+    </entity>
+
+</doctrine-mapping>

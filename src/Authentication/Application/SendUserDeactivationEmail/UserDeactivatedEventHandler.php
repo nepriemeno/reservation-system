@@ -22,7 +22,7 @@ final class UserDeactivatedEventHandler implements EventHandlerInterface
     /** @throws UserNotFoundException */
     public function __invoke(UserDeactivatedEvent $userDeactivatedEvent): void
     {
-        $uuid = $userDeactivatedEvent->getUuid();
+        $uuid = $userDeactivatedEvent->getUserUuid();
         $user = $this->userRepository->getOneByUuid($uuid);
 
         if ($user->isEmailVerified()) {

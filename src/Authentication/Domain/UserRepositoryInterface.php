@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Authentication\Domain;
 
 use App\Authentication\Domain\Exception\UserNotFoundException;
+use Doctrine\DBAL\Exception;
 
 interface UserRepositoryInterface
 {
+    /** @throws Exception */
     public function save(User $user): void;
     public function findOneByUuid(string $uuid): ?User;
     /**

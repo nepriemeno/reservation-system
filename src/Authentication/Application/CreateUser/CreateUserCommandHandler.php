@@ -10,6 +10,7 @@ use App\Authentication\Domain\UserPasswordHasherInterface;
 use App\Authentication\Domain\UserRepositoryInterface;
 use App\Shared\Domain\Bus\Command\CommandHandlerInterface;
 use App\Shared\Domain\UuidCreatorInterface;
+use Doctrine\DBAL\Exception;
 
 final class CreateUserCommandHandler implements CommandHandlerInterface
 {
@@ -20,7 +21,7 @@ final class CreateUserCommandHandler implements CommandHandlerInterface
     ) {
     }
 
-    /** @throws UserAlreadyExistsException */
+    /** @throws UserAlreadyExistsException|Exception */
     public function __invoke(CreateUserCommand $command): void
     {
         $uuid = $this->uuidCreator->create();
@@ -31,9 +32,14 @@ final class CreateUserCommandHandler implements CommandHandlerInterface
             throw new UserAlreadyExistsException();
         }
 
-        $user = new User($uuid, $email);
-        $hashedPassword = $this->userPasswordHasher->hashPassword($user, $password);
-        $user->setPassword($hashedPassword);
+        $hashedPassword = $this->userPasswordHasher->hashPassword(
+            $uuid,
+            null,
+            User::ROLES,
+            $password
+        );
+
+        $user = User::create($uuid, $email, $hashedPassword, $this->uuidCreator->create());
         $this->userRepository->save($user);
     }
 }

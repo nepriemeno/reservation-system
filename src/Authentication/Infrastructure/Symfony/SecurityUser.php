@@ -4,24 +4,31 @@ declare(strict_types=1);
 
 namespace App\Authentication\Infrastructure\Symfony;
 
-use App\Authentication\Domain\User;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 final class SecurityUser implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    public function __construct(private readonly User $user)
-    {
+    /**
+     * @param string $uuid
+     * @param string|null $password
+     * @param string[] $roles
+     */
+    public function __construct(
+        private readonly string $uuid,
+        private readonly ?string $password,
+        private readonly array $roles,
+    ) {
     }
 
     public function getPassword(): ?string
     {
-        return $this->user->getPassword();
+        return $this->password;
     }
 
     public function getRoles(): array
     {
-        return $this->user->getRoles();
+        return $this->roles;
     }
 
     public function eraseCredentials(): void
@@ -30,6 +37,6 @@ final class SecurityUser implements UserInterface, PasswordAuthenticatedUserInte
 
     public function getUserIdentifier(): string
     {
-        return $this->user->getUuid();
+        return $this->uuid;
     }
 }

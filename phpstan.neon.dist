@@ -1,3 +1,5 @@
 parameters:
   bootstrapFiles:
     - tools/phpunit/vendor/autoload.php
+  doctrine:
+    objectManagerLoader: tests/ObjectManagerLoader.php

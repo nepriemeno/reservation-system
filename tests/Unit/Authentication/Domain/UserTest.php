@@ -45,7 +45,7 @@ final class UserTest extends TestCase
         $this->assertSame($roles, $user->getRoles());
         $this->assertSame($emailVerificationSlug, $user->getEmailVerificationSlug());
         $this->assertSame($emailVerificationSlugExpiresAt, $user->getEmailVerificationSlugExpiresAt());
-        $this->assertSame($isActive, $user->getIsActive());
+        $this->assertSame($isActive, $user->isActive());
         $this->assertNotNull($user->getCreatedAt());
         $this->assertNotNull($user->getUpdatedAt());
     }

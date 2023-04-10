@@ -10,6 +10,7 @@ use App\Authentication\Domain\UserPasswordHasherInterface;
 use App\Authentication\Domain\UserPasswordValidatorInterface;
 use App\Authentication\Domain\UserRepositoryInterface;
 use App\Shared\Domain\Bus\Command\CommandHandlerInterface;
+use Doctrine\DBAL\Exception;
 
 final class ChangeUserPasswordCommandHandler implements CommandHandlerInterface
 {
@@ -20,7 +21,7 @@ final class ChangeUserPasswordCommandHandler implements CommandHandlerInterface
     ) {
     }
 
-    /** @throws UserNotFoundException|UserCurrentPasswordInvalidException */
+    /** @throws UserNotFoundException|UserCurrentPasswordInvalidException|Exception */
     public function __invoke(ChangeUserPasswordCommand $command): void
     {
         $uuid = $command->getUuid();
@@ -32,8 +33,13 @@ final class ChangeUserPasswordCommandHandler implements CommandHandlerInterface
             throw new UserCurrentPasswordInvalidException();
         }
 
-        $hashedPassword = $this->userPasswordHasher->hashPassword($user, $password);
-        $user->setPassword($hashedPassword);
+        $hashedPassword = $this->userPasswordHasher->hashPassword(
+            $user->getUuid(),
+            $user->getPassword(),
+            $user->getRoles(),
+            $password
+        );
+        $user->changePassword($hashedPassword);
         $this->userRepository->save($user);
     }
 }

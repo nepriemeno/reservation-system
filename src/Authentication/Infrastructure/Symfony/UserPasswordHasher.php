@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Authentication\Infrastructure\Symfony;
 
-use App\Authentication\Domain\User;
 use App\Authentication\Domain\UserPasswordHasherInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface as SymfonyUserPasswordHasherInterface;
 
@@ -14,9 +13,9 @@ final class UserPasswordHasher implements UserPasswordHasherInterface
     {
     }
 
-    public function hashPassword(User $user, string $password): string
+    public function hashPassword(string $userUuid, ?string $userPassword, array $userRoles, string $password): string
     {
-        $securityUser = new SecurityUser($user);
+        $securityUser = new SecurityUser($userUuid, $userPassword, $userRoles);
 
         return $this->userPasswordHasher->hashPassword($securityUser, $password);
     }
