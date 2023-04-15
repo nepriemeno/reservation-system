@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Product\DeactivateProduct;
+namespace App\Product\Application\DeactivateProduct;
 
 use App\Shared\Domain\Bus\Command\CommandInterface;
 

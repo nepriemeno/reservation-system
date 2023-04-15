@@ -24,12 +24,13 @@ final class OutboxMessageRepository extends ServiceEntityRepository implements O
         $em->flush();
     }
 
-    public function findUnprocessed(int $limit): array
+    public function findUnprocessed(int $limit, string $domain): array
     {
         $query = $this->getEntityManager()->createQueryBuilder()
             ->select('om')
             ->from(OutboxMessage::class, 'om')
-            ->andWhere('om.processedAt IS NULL')
+            ->andWhere('om.processedAt IS NULL AND om.domain = :domain')
+            ->setParameter('domain', $domain)
             ->setMaxResults($limit)
             ->getQuery();
 

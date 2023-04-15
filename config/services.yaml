@@ -45,7 +45,7 @@ services:
     App\Authentication\Application\ActivateUser\ActivateUserCommandHandler:
         tags: [ messenger.message_handler ]
 
-    App\Shared\Application\ConsumeOutboxMessages\ConsumeOutboxMessagesCommandHandler:
+    App\Authentication\Application\ConsumeOutboxMessages\ConsumeOutboxMessagesCommandHandler:
         tags: [ messenger.message_handler ]
 
     App\Authentication\Infrastructure\Doctrine\UserRepository: ~

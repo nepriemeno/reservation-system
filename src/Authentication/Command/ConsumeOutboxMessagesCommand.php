@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Shared\Command;
+namespace App\Authentication\Command;
 
-use App\Shared\Application\ConsumeOutboxMessages\ConsumeOutboxMessagesCommand as ConsumeApplicationCommand;
+use App\Authentication\Application\ConsumeOutboxMessages\ConsumeOutboxMessagesCommand as ConsumeMessagesCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -12,7 +12,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-#[AsCommand(name: 'app:shared.command.consume_outbox_messages')]
+#[AsCommand(name: 'app:authentication.command.consume_outbox_messages')]
 final class ConsumeOutboxMessagesCommand extends Command
 {
     public function __construct(
@@ -35,7 +35,7 @@ final class ConsumeOutboxMessagesCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $amount = intval($input->getArgument('amount'));
-        $this->bus->dispatch((new ConsumeApplicationCommand($amount)));
+        $this->bus->dispatch((new ConsumeMessagesCommand($amount)));
 
         return Command::SUCCESS;
     }

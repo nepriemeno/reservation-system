@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Shared\Application\ConsumeOutboxMessages;
+namespace App\Authentication\Application\ConsumeOutboxMessages;
 
 use App\Shared\Domain\Bus\Command\CommandInterface;
 

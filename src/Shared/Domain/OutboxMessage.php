@@ -11,6 +11,7 @@ class OutboxMessage
 {
     /**
      * @param string $uuid
+     * @param string $domain
      * @param string $type
      * @param array<string, mixed> $content
      * @param DateTimeImmutable $createdAt
@@ -18,6 +19,7 @@ class OutboxMessage
      */
     public function __construct(
         private readonly string $uuid,
+        private readonly string $domain,
         private readonly string $type,
         private readonly array $content,
         private readonly DateTimeImmutable $createdAt,
@@ -28,6 +30,11 @@ class OutboxMessage
     public function getUuid(): string
     {
         return $this->uuid;
+    }
+
+    public function getDomain(): string
+    {
+        return $this->domain;
     }
 
     public function getType(): string

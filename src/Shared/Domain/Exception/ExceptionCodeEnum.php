@@ -8,4 +8,6 @@ enum ExceptionCodeEnum: int
 {
     case JsonEncode = 100;
     case BadRequest = 101;
+    case EventCreateFromOutbox = 102;
+    case EventFactory = 103;
 }

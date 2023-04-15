@@ -9,8 +9,9 @@ interface OutboxMessageRepositoryInterface
     public function save(OutboxMessage $outboxMessage): void;
     /**
      * @param int $limit
+     * @param string $domain
      *
      * @return OutboxMessage[]
      */
-    public function findUnprocessed(int $limit): array;
+    public function findUnprocessed(int $limit, string $domain): array;
 }

@@ -8,6 +8,7 @@
             repository-class="App\Shared\Infrastructure\Doctrine\OutboxMessageRepository"
     >
         <id name="uuid" type="guid" />
+        <field name="domain" type="string" />
         <field name="type" type="string" />
         <field name="content" type="json" />
         <field name="createdAt" type="datetime_immutable" />
