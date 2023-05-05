@@ -87,6 +87,17 @@ final class UserRepository extends ServiceEntityRepository implements UserReposi
         return $user;
     }
 
+    public function getOneByUuidActiveAdmin(string $uuid): User
+    {
+        $user = $this->findOneBy(['uuid' => $uuid, 'isActive' => true, 'roles' => ["ROLE_ADMIN"]]);
+
+        if ($user === null) {
+            throw new UserNotFoundException();
+        }
+
+        return $user;
+    }
+
     public function findOneByEmail(string $email): ?User
     {
         return $this->findOneBy(['email' => $email]);

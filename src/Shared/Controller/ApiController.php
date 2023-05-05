@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Shared\Controller;
 
+use App\Shared\Domain\Exception\BadRequestException;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -12,6 +14,18 @@ abstract class ApiController
 {
     public function __construct(protected ValidatorInterface $validator)
     {
+    }
+
+    /** @throws BadRequestException */
+    protected function getRequestParameters(Request $request): array
+    {
+        $parameters = json_decode($request->getContent(), true);
+
+        if (!is_array($parameters)) {
+            throw new BadRequestException();
+        }
+
+        return $parameters;
     }
 
     /**

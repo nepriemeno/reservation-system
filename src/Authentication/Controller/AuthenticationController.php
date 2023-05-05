@@ -42,17 +42,9 @@ final class AuthenticationController extends ApiController
     public function register(Request $request, MessageBusInterface $bus): JsonResponse
     {
         try {
-            $parameters = json_decode($request->getContent(), true);
-
-            if (!is_array($parameters)) {
-                throw new BadRequestException();
-            }
-
-            $constraint = new Assert\Collection([
-                'email' => new Assert\Email(),
-                'password' => new Assert\Length(['min' => 8]),
-            ]);
-            $errorMessages = $this->getErrorMessages($parameters, $constraint);
+            $parameters = $this->getRequestParameters($request);
+            $registerRequest = RegisterRequest::createFromParameters($parameters);
+            $errorMessages = $this->getErrorMessages($parameters, RegisterRequest::getConstraint());
 
             if (count($errorMessages['errors']) > 0) {
                 return new JsonResponse($errorMessages, Response::HTTP_BAD_REQUEST);

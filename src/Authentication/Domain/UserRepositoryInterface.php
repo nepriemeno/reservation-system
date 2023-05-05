@@ -29,6 +29,14 @@ interface UserRepositoryInterface
      * @throws UserNotFoundException
      */
     public function getOneByUuidActive(string $uuid): User;
+    /**
+     * @param string $uuid
+     *
+     * @return User
+     *
+     * @throws UserNotFoundException
+     */
+    public function getOneByUuidActiveAdmin(string $uuid): User;
     public function findOneByEmail(string $email): ?User;
     /**
      * @param string $email
